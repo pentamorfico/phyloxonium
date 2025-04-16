@@ -58,7 +58,6 @@ export default function () {
   this.view.style.height = `${this.props.size.height}px`;
 
   this.deck.setProps({
-    viewState,
     width: this.props.size.width,
     height: this.props.size.height,
     layers: deckglLayers,

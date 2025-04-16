@@ -19,8 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import memoise from "../../utils/memoise";
-import logarithmicScale from "../../utils/logarithmic-scale";
+import memoise from "@utils/memoise";
+import logarithmicScale from "@utils/logarithmic-scale";
 
 const minAlpha = 71; /* 0.28 x 255 */
 // const minAlpha = 107 /* 0.42 x 255 */;

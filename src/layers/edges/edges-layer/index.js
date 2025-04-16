@@ -1,61 +1,28 @@
-// Copyright (c) 2015 - 2017 Uber Technologies, Inc.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
-import { LineLayer } from '@deck.gl/layers';
+import { LineLayer, PathLayer } from '@deck.gl/layers';
 import { CompositeLayer } from '@deck.gl/core';
-
-import CircularCurveLayer from '../../../layers/edges/circular-curve-layer/index.js';
-import { TreeTypes } from '../../../lib/constants.js';
+import { TreeTypes } from '@lib/constants';
+import { CollisionFilterExtension } from '@deck.gl/extensions';
 
 const EMPTY_ARRAY = Object.freeze([]);
 
 export default class EdgesLayer extends CompositeLayer {
   static get componentName() {
-    // Tells deck.gl logs “EdgesLayer”
     return 'EdgesLayer';
   }
 
   updateState({ props, changeFlags }) {
     if (changeFlags.dataChanged) {
       const updater = {
-        roots: [props.data.root]
+        roots: [props.data.root],
+        nodes: []
       };
 
-      updater.nodes = [];
-      for (let i = props.data.firstIndex + 1; i < props.data.lastIndex; i++) {
+      for (let i = props.data.firstIndex; i < props.data.lastIndex; i++) {
         const node = props.data.preorderTraversal[i];
         updater.nodes.push(node);
 
-        // skip collapsed sub-trees
         if (node.isCollapsed) {
           i += node.totalNodes - 1;
-        }
-      }
-
-      if (this.props.treeType === TreeTypes.Circular && changeFlags.dataChanged) {
-        // data to pass to the sublayer
-        updater.nodesWithChldren = [];
-        for (const node of updater.nodes) {
-          if (node.children && node.children.length > 1) {
-            updater.nodesWithChldren.push(node);
-          }
         }
       }
 
@@ -64,147 +31,250 @@ export default class EdgesLayer extends CompositeLayer {
   }
 
   renderLayers() {
-    const { nodes, roots } = this.state;
-
+    const { nodes } = this.state;
     const layers = [];
 
-    if (this.props.treeType === TreeTypes.Rectangular) {
-      layers.push(
-        new LineLayer({
-          data: nodes,
-          getColor: this.props.getColor,
-          getWidth: this.props.lineWidth,
-          id: 'edges-vertical-lines',
-          pickable: true,
-          updateTriggers: this.props.updateTriggers,
-          getSourcePosition: (node) => [node.parent.x, node.y],
-          getTargetPosition: (node) => [node.x, node.y]
-        })
-      );
-      layers.push(
-        new LineLayer({
-          data: nodes,
-          getColor: this.props.getColor,
-          getWidth: this.props.lineWidth,
-          id: 'edges-horizontal-lines',
-          pickable: true,
-          updateTriggers: this.props.updateTriggers,
-          getSourcePosition: (node) => [node.parent.x, node.parent.y],
-          getTargetPosition: (node) => [node.parent.x, node.y]
-        })
-      );
-    } else if (this.props.treeType === TreeTypes.Hierarchical) {
-      layers.push(
-        new LineLayer({
-          data: nodes,
-          getColor: this.props.getColor,
-          getWidth: this.props.lineWidth,
-          id: 'edges-vertical-lines',
-          pickable: true,
-          updateTriggers: this.props.updateTriggers,
-          getSourcePosition: (node) => [node.x, node.parent.y],
-          getTargetPosition: (node) => [node.x, node.y]
-        })
-      );
-      layers.push(
-        new LineLayer({
-          data: nodes,
-          getColor: this.props.getColor,
-          getWidth: this.props.lineWidth,
-          id: 'edges-horizontal-lines',
-          pickable: true,
-          updateTriggers: this.props.updateTriggers,
-          getSourcePosition: (node) => [node.parent.x, node.parent.y],
-          getTargetPosition: (node) => [node.x, node.parent.y]
-        })
-      );
-    } else if (
-      this.props.treeType === TreeTypes.Diagonal ||
-      this.props.treeType === TreeTypes.Radial
-    ) {
-      layers.push(
-        new LineLayer({
-          data: nodes,
-          getColor: this.props.getColor,
-          getWidth: this.props.lineWidth,
-          id: 'edges-parent-lines',
-          pickable: true,
-          updateTriggers: this.props.updateTriggers,
-          getSourcePosition: (node) => [node.parent.x, node.parent.y],
-          getTargetPosition: (node) => [node.x, node.y]
-        })
-      );
-    } else if (this.props.treeType === TreeTypes.Circular) {
-      const { nodesWithChldren } = this.state;
-      layers.push(
-        new LineLayer({
-          data: nodes,
-          getColor: this.props.getColor,
-          getWidth: this.props.lineWidth,
-          id: 'edges-central-lines',
-          pickable: true,
-          updateTriggers: this.props.updateTriggers,
-          getSourcePosition: (node) => [node.x, node.y],
-          getTargetPosition: (node) => [node.cx, node.cy]
-        })
-      );
-      layers.push(
-        new CircularCurveLayer({
-          data: nodesWithChldren,
-          getColor: this.props.getColor,
-          id: 'edges-arcs',
-          pickable: true,
-          strokeWidth: this.props.lineWidth,
-          updateTriggers: this.props.updateTriggers,
-          getCentrePoint: [this.props.data.root.x, this.props.data.root.y],
-          getEndAngle: (x) => x.children[x.children.length - 1].angle,
-          getStartAngle: (x) => x.children[0].angle,
-          getRadius: (x) => x.dist
-        })
-      );
-    }
-
-    if (
-      this.props.treeType === TreeTypes.Rectangular ||
-      this.props.treeType === TreeTypes.Diagonal
-    ) {
-      layers.push(
-        new LineLayer({
-          data: roots,
-          getColor: this.props.getColor,
-          getWidth: this.props.lineWidth,
-          id: 'edges-root-line',
-          pickable: true,
-          updateTriggers: this.props.updateTriggers,
-          getSourcePosition: (node) => [node.x, node.y],
-          getTargetPosition: (node) => [node.x - 10, node.y]
-        })
-      );
-    } else if (this.props.treeType === TreeTypes.Hierarchical) {
-      layers.push(
-        new LineLayer({
-          data: roots,
-          getColor: this.props.getColor,
-          getWidth: this.props.lineWidth,
-          id: 'edges-root-line',
-          pickable: true,
-          updateTriggers: this.props.updateTriggers,
-          getSourcePosition: (node) => [node.x, node.y],
-          getTargetPosition: (node) => [node.x, node.y - 10]
-        })
-      );
+    switch (this.props.treeType) {
+      case TreeTypes.Rectangular:
+        layers.push(...this.renderRectangularEdges(nodes));
+        break;
+      case TreeTypes.Hierarchical:
+        layers.push(...this.renderHierarchicalEdges(nodes));
+        break;
+      case TreeTypes.Diagonal:
+        layers.push(...this.renderDiagonalEdges(nodes));
+      case TreeTypes.Radial:
+        layers.push(...this.renderDiagonalEdges(nodes));
+        break;
+      case TreeTypes.Circular:
+        layers.push(...this.renderCircularEdges(nodes));
+        break;
+      default:
+        layers.push(...this.renderNormalEdges(nodes));
+        break;
     }
 
     return layers;
   }
+
+  renderNormalEdges(nodes) {
+    const safeNodes = nodes.filter(n => n.parent);
+    return [
+      new LineLayer({
+        id: 'edges-layer',
+        data: safeNodes,
+        getSourcePosition: node => [node.parent.x, node.parent.y],
+        getTargetPosition: node => [node.x, node.y],
+        getColor: this.props.getColor,
+        getWidth: this.props.lineWidth,
+        pickable: true,
+        updateTriggers: {
+          getWidth: this.props.lineWidth,
+          getColor: this.props.getColor,
+        },
+      })
+    ];
+  }
+
+  renderRectangularEdges(nodes) {
+    const safeNodes = nodes.filter(n => n.parent);
+    return [
+      new LineLayer({
+        id: 'rectangular-edges-vertical',
+        data: safeNodes,
+        getSourcePosition: node => [node.parent.x, node.y],
+        getTargetPosition: node => [node.x, node.y],
+        getColor: this.props.getColor,
+        getWidth: this.props.lineWidth,
+        pickable: true,
+        collisionEnabled : false,
+        updateTriggers: this.props.updateTriggers,
+        extensions: [new CollisionFilterExtension()],
+        collisionGroup: 'edges',
+        sizeUnits: 'meters',
+        
+      }),
+      new LineLayer({
+        id: 'rectangular-edges-horizontal',
+        data: safeNodes,
+        getSourcePosition: node => [node.parent.x, node.parent.y],
+        getTargetPosition: node => [node.parent.x, node.y],
+        getColor: this.props.getColor,
+        getWidth: this.props.lineWidth,
+        pickable: true,
+        collisionEnabled : false,
+        updateTriggers: this.props.updateTriggers,
+        extensions: [new CollisionFilterExtension()],
+        collisionGroup: 'edges',
+      })
+    ];
+  }
+
+  renderHierarchicalEdges(nodes) {
+    const safeNodes = nodes.filter(n => n.parent);
+    return [
+      new LineLayer({
+        id: 'hierarchical-edges',
+        data: safeNodes,
+        getSourcePosition: node => [node.x, node.parent.y],
+        getTargetPosition: node => [node.x, node.y],
+        getColor: this.props.getColor,
+        getWidth: this.props.lineWidth,
+        pickable: true,
+        updateTriggers: this.props.updateTriggers
+      }),
+      new LineLayer({
+        id: 'hierarchical-edges-horizontal',
+        data: safeNodes,
+        getSourcePosition: node => [node.parent.x, node.parent.y],
+        getTargetPosition: node => [node.x, node.parent.y],
+        getColor: this.props.getColor,
+        getWidth: this.props.lineWidth,
+        pickable: true,
+        updateTriggers: this.props.updateTriggers
+      })
+    ];
+  }
+
+  renderDiagonalEdges(nodes) {
+    const safeNodes = nodes.filter(n => n.parent);
+    return [
+      new LineLayer({
+        id: 'diagonal-edges',
+        data: safeNodes,
+        getSourcePosition: node => [node.parent.x, node.parent.y],
+        getTargetPosition: node => [node.x, node.y],
+        getColor: this.props.getColor,
+        getWidth: this.props.lineWidth,
+        pickable: true,
+        updateTriggers: this.props.updateTriggers
+      })
+    ];
+  }
+
+  renderCircularEdges(nodes) {
+    const center = [this.props.data.root.x, this.props.data.root.y];
+    const edgeSegments = [];
+
+    const parentToChildren = this.groupChildrenByParent(nodes);
+
+    for (const [parent, children] of parentToChildren) {
+      if (children.length < 2) continue;
+
+      children.sort((a, b) => {
+        const angleA = Math.atan2(a.y - center[1], a.x - center[0]);
+        const angleB = Math.atan2(b.y - center[1], b.x - center[0]);
+        return angleA - angleB;
+      });
+
+      const normAngle = a => (a + 2 * Math.PI) % (2 * Math.PI);
+      const angle1 = normAngle(Math.atan2(children[0].y - center[1], children[0].x - center[0]));
+      const angle2 = normAngle(Math.atan2(children[children.length - 1].y - center[1], children[children.length - 1].x - center[0]));
+      const angleMid = (angle1 + angle2) / 2;
+
+      const rParent = Math.hypot(parent.x - center[0], parent.y - center[1]);
+      const rMinChild = Math.min(...children.map(child =>
+        Math.hypot(child.x - center[0], child.y - center[1])
+      ));
+
+      const rMid = (rMinChild + rParent) / 2;
+
+      const anchor1 = [
+        center[0] + rMid * Math.cos(angle1),
+        center[1] + rMid * Math.sin(angle1)
+      ];
+      const anchor2 = [
+        center[0] + rMid * Math.cos(angle2),
+        center[1] + rMid * Math.sin(angle2)
+      ];
+
+      const midpoint = [
+        center[0] + rMid * Math.cos(angleMid),
+        center[1] + rMid * Math.sin(angleMid)
+      ];
+
+      edgeSegments.push({
+        type: 'line',
+        from: [parent.x, parent.y],
+        to: midpoint
+      });
+
+      edgeSegments.push({
+        type: 'arc',
+        path: this.generateArcPoints(center, angle1, angle2, rMid, 100)
+      });
+
+      for (const child of children) {
+        const angleChild = Math.atan2(child.y - center[1], child.x - center[0]);
+        const anchor = [
+          center[0] + rMid * Math.cos(angleChild),
+          center[1] + rMid * Math.sin(angleChild)
+        ];
+        edgeSegments.push({
+          type: 'line',
+          from: anchor,
+          to: [child.x, child.y]
+        });
+      }
+    }
+
+    const lineData = edgeSegments.filter(e => e.type === 'line');
+    const arcData = edgeSegments.filter(e => e.type === 'arc');
+
+    return [
+      new LineLayer({
+        id: 'circular-lines',
+        data: lineData,
+        getSourcePosition: d => d.from,
+        getTargetPosition: d => d.to,
+        getColor: this.props.getColor,
+        getWidth: this.props.lineWidth,
+        widthMinPixels: 1,
+        pickable: true
+      }),
+      new PathLayer({
+        id: 'circular-arcs',
+        data: arcData,
+        getPath: d => d.path,
+        getColor: this.props.getColor,
+        getWidth: this.props.lineWidth/100,
+        widthMinPixels: 1,
+        pickable: true
+      })
+    ];
+  }
+
+  generateArcPoints(center, startAngle, endAngle, radius, segments) {
+  let delta = endAngle - startAngle;
+  if (Math.abs(delta) > Math.PI) {
+    if (delta > 0) {
+      startAngle -= 2 * Math.PI; // normalize angle
+    } else {
+      endAngle += 2 * Math.PI; // normalize angle
+    }
+  }
+
+  const points = [];
+  for (let i = 0; i <= segments; i++) {
+    const t = i / segments;
+    const angle = startAngle + t * (endAngle - startAngle);
+    points.push([
+      center[0] + radius * Math.cos(angle),
+      center[1] + radius * Math.sin(angle)
+    ]);
+  }
+  return points;
 }
 
-EdgesLayer.defaultProps = {
-  data: { type: 'data', value: EMPTY_ARRAY, async: true },
 
-  // Shared accessors
-  getColor: { type: 'accessor', value: (x) => x.fillColour },
-
-  // lines accessors
-  lineWidth: 1
-};
+  groupChildrenByParent(nodes) {
+    const groups = new Map();
+    for (const node of nodes) {
+      const parent = node.parent;
+      if (!parent) continue;
+      if (!groups.has(parent)) groups.set(parent, []);
+      groups.get(parent).push(node);
+    }
+    return groups;
+  }
+}

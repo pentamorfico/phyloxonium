@@ -19,14 +19,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import memoise from "../../utils/memoise";
-import colourToRGBA from "../../utils/colour-to-rgba";
-
+import memoise from "@utils/memoise";
+import colourToRGBA from "@utils/colour-to-rgba";
 import fontSizeMemo from "./font-size";
 import blocksDataMemo from "./blocks-data";
 import headersDataMemo from "./headers-data";
 import pixelOffsetAccessorMemo from "./pixel-offset-accessor";
-
 import MetadataLayer from "./metadata-layer";
 
 export default () => memoise(

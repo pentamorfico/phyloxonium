@@ -19,17 +19,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import defaults from "../../defaults";
-
-import memoise from "../../utils/memoise";
-import colourToRGBA from "../../utils/colour-to-rgba";
-
+import defaults from "@lib/defaults";
+import memoise from "@utils/memoise";
+import colourToRGBA from "@utils/colour-to-rgba";
 import fontColourAccessorMemo from "./font-colour-accessor";
 import labelledNodesMemo from "./labelled-leaf-nodes";
 import textPositionAccessorMemo from "./text-position-accessor";
-
 import LabelsLayer from "./labels-layer";
-
 export default () => memoise(
   labelledNodesMemo,
   (tree) => tree.getFontSize(),
@@ -70,7 +66,7 @@ export default () => memoise(
       lineWidth: lineWidth * 0.5,
       updateTriggers: { getTextPosition: textPositionAccessor },
     });
-
+    console.log("leaf-labels", labelledNodes);
     return layer;
   }
 );

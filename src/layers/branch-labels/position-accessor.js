@@ -19,9 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import memoise from "../../utils/memoise";
-
-import { TreeTypes } from "../../constants";
+import memoise from "@utils/memoise";
+import { TreeTypes } from "@lib/constants";
 
 export default memoise(
   (tree) => tree.getTreeType(),

@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import memoise from "../../utils/memoise";
+import memoise from "@utils/memoise";
 
 const internalLabelsMemo = memoise(
   (tree) => tree.getGraphAfterLayout(),

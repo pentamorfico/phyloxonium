@@ -20,14 +20,12 @@
 // THE SOFTWARE.
 
 import { ScatterplotLayer } from "@deck.gl/layers";
-
-import defaults from "../../defaults";
-
-import memoise from "../../utils/memoise";
-import colourToRGBA from "../../utils/colour-to-rgba";
-
-import haloSizeMemo from "./halo-size";
+import memoise from "@utils/memoise";
 import selectedNodesMemo from "./selected-nodes";
+import haloSizeMemo from "./halo-size";
+
+import defaults from "@lib/defaults";
+import colourToRGBA from "@utils/colour-to-rgba";
 
 export default () => memoise(
   selectedNodesMemo,
@@ -48,7 +46,7 @@ export default () => memoise(
         let size = haloSize.leaf;
         if (!node.isLeaf) {
           if (node.isCollapsed) {
-            size = node.size + haloWidth;
+            size = node.size + 10;
           }
           else {
             size = haloSize.internal;
@@ -62,6 +60,7 @@ export default () => memoise(
       stroked: true,
       radiusUnits: "pixels",
       lineWidthUnits: "pixels",
+      visible: false,
     });
     return layer;
   }

@@ -1,10 +1,3 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -35,8 +28,25 @@
 
 .card {
   padding: 2em;
+  background-color: var(--card-background);
+  border: 1px solid var(--card-border);
 }
 
 .read-the-docs {
   color: #888;
 }
+
+/* Define light theme styles */
+:root {
+  --background-color: #ffffff;
+  --text-color: #000000;
+  --card-background: #f9f9f9;
+  --card-border: #e0e0e0;
+}
+
+/* Apply the light theme by default */
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+

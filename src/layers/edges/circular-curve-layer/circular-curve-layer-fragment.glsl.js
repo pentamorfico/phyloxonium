@@ -19,19 +19,24 @@
 // THE SOFTWARE.
 
 export default `\
+#version 300 es
 #define SHADER_NAME circular-curve-layer-fragment-shader
 
 precision highp float;
 
-varying vec4 vColor;
+// Varyings
+in vec4 vColor;
+
+// Output
+out vec4 fragColor;
 
 void main(void) {
-  gl_FragColor = vColor;
+  fragColor = vColor;
 
-  // use highlight color if this fragment belongs to the selected object.
-  gl_FragColor = picking_filterHighlightColor(gl_FragColor);
+  // Apply highlight color if this fragment belongs to the selected object
+  fragColor = picking_filterHighlightColor(fragColor);
 
-  // use picking color if rendering to picking FBO.
-  gl_FragColor = picking_filterPickingColor(gl_FragColor);
+  // Use picking color if rendering to the picking FBO
+  fragColor = picking_filterPickingColor(fragColor);
 }
 `;

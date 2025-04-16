@@ -21,25 +21,30 @@
 
 import { IconLayer } from "@deck.gl/layers";
 import { CompositeLayer } from "@deck.gl/core";
+import { CollisionFilterExtension } from "@deck.gl/extensions";
 
 export default class ShapesLayer extends CompositeLayer {
+  static get componentName() {
+    return "ShapesLayer";
+  }
 
   renderLayers() {
     return [
-      new IconLayer({
-        id: "shapes-border",
-        data: this.props.data,
-        pickable: false,
-        iconAtlas: this.props.iconAtlas,
-        iconMapping: this.props.iconMapping,
-        getIcon: this.props.getIcon,
-        getPosition: this.props.getPosition,
-        getSize: this.props.getSize,
-        sizeScale: this.props.borderSizeScale,
-        getColor: this.props.borderColour,
-        visible: this.props.showBorders,
-        updateTriggers: { getSize: this.props.getSize },
-      }),
+      // new IconLayer({
+      //   id: "shapes-border",
+      //   data: this.props.data,
+      //   pickable: false,
+      //   iconAtlas: this.props.iconAtlas,
+      //   iconMapping: this.props.iconMapping,
+      //   getIcon: this.props.getIcon,
+      //   getPosition: this.props.getPosition,
+      //   getSize: this.props.getSize,
+      //   sizeScale: this.props.borderSizeScale,
+      //   getColor: this.props.borderColour,
+      //   visible: this.props.showBorders,
+      //   updateTriggers: { getSize: this.props.getSize },
+
+      // }),
 
       new IconLayer({
         id: "shapes-fill",
@@ -52,6 +57,16 @@ export default class ShapesLayer extends CompositeLayer {
         getSize: this.props.getSize,
         getColor: this.props.getColor,
         updateTriggers: { getSize: this.props.getSize },
+        stroked: true,
+        extensions: [new CollisionFilterExtension()],
+        collisionGroup: "shapes",
+        sizeUnits: "meters",
+        sizeMinPixels: 1,
+        sizeMaxPixels: 9,
+        autoHighlight: true,
+
+        
+
       }),
     ];
   }
@@ -73,5 +88,3 @@ ShapesLayer.defaultProps = {
   borderColor: [ 0, 0, 0 ],
   borderSizeScale: 1,
 };
-
-ShapesLayer.componentName = "ShapesLayer";

@@ -19,8 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { TreeTypes, Angles } from "../../constants";
-import memoise from "../../utils/memoise";
+import { TreeTypes, Angles } from "@lib/constants";
+import memoise from "@utils/memoise";
 
 const leavesPerLabelMemo = memoise(
   (tree) => tree.getTreeType(),
@@ -57,10 +57,10 @@ const leavesPerLabelMemo = memoise(
 
       // Calculate how many labels can be displayed without overlapping
       // assuming that the height of each label is equivalent to fontSize
-      const maxNumOfLabels = treeLength / fontSize;
+      const maxNumOfLabels = 10000;
 
       // Finally calculate the number of leaf nodes per one label
-      const leavesPerLabel = graph.root.totalLeaves / maxNumOfLabels;
+      const leavesPerLabel = graph.root.totalLeaves / (maxNumOfLabels);
 
       if (leavesPerLabel <= 1) {
         return 1;

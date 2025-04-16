@@ -21,88 +21,172 @@
 
 /* eslint-disable quote-props */
 
-export default {
-  "addLayer": require("./add-layer").default,
-  "ascendingNodeOrder": require("./ascending-node-order").default,
-  "branchZoomingAxis": require("./branch-zooming-axis").default,
-  "collapseNode": require("./collapse-node").default,
-  "descendingNodeOrder": require("./descending-node-order").default,
-  "destroy": require("./destroy").default,
-  "exportJSON": require("./export-json").default,
-  "exportNewick": require("./export-newick").default,
-  "exportPNG": require("./export-png").default,
-  "exportSVG": require("./export-svg").default,
-  "findNodeById": require("./find-node-by-id").default,
-  "fitInCanvas": require("./fit-in-canvas").default,
-  "getAlignLeafLabels": require("./get-align-leaf-labels").default,
-  "getBlockHeaderFontSize": require("./get-block-header-font-size").default,
-  "getBlockPadding": require("./get-block-padding").default,
-  "getBlockSize": require("./get-block-size").default,
-  "getBranchScale": require("./get-branch-scale").default,
-  "getBranchZoom": require("./get-branch-zoom").default,
-  "getCanvasCentrePoint": require("./get-canvas-centre-point").default,
-  "getCanvasSize": require("./get-canvas-size").default,
-  "getDrawingArea": require("./get-drawing-area").default,
-  "getFillColour": require("./get-fill-colour").default,
-  "getFontFamily": require("./get-font-family").default,
-  "getFontSize": require("./get-font-size").default,
-  "getGraphAfterLayout": require("./get-graph-after-layout").default,
-  "getGraphBeforeLayout": require("./get-graph-before-layout").default,
-  "getGraphWithoutLayout": require("./get-graph-without-layout").default,
-  "getGraphWithStyles": require("./get-graph-with-styles").default,
-  "getHighlightedNode": require("./get-highlighted-node").default,
-  "getMaxScale": require("./get-max-scale").default,
-  "getMaxZoom": require("./get-max-zoom").default,
-  "getMetadataColumnWidth": require("./get-metadata-column-width").default,
-  "getMinScale": require("./get-min-scale").default,
-  "getMinZoom": require("./get-min-zoom").default,
-  "getNodeSize": require("./get-node-size").default,
-  "getPadding": require("./get-padding").default,
-  "getPixelOffsets": require("./get-pixel-offsets").default,
-  "getScale": require("./get-scale").default,
-  "getShowShapes": require("./get-show-shapes").default,
-  "getStepScale": require("./get-step-scale").default,
-  "getStepZoom": require("./get-step-zoom").default,
-  "getStepZoomingAxis": require("./get-step-zooming-axis").default,
-  "getStrokeColour": require("./get-stroke-colour").default,
-  "getStrokeWidth": require("./get-stroke-width").default,
-  "getTreeType": require("./get-tree-type").default,
-  "getView": require("./get-view").default,
-  "getWorldBounds": require("./get-world-bounds").default,
-  "getZoom": require("./get-zoom").default,
-  "handleClick": require("./handle-click").default,
-  "handleHover": require("./handle-hover").default,
-  "hasLeafLabels": require("./has-leaf-labels").default,
-  "hasMetadata": require("./has-metadata").default,
-  "hasMetadataHeaders": require("./has-metadata-headers").default,
-  "hasMetadataLabels": require("./has-metadata-labels").default,
-  "highlightNode": require("./highlight-node").default,
-  "importJSON": require("./import-json").default,
-  "init": require("./init").default,
-  "isCanvasPointOnScreen": require("./is-canvas-point-on-screen").default,
-  "isOrthogonal": require("./is-orthogonal").default,
-  "isTreePointOnScreen": require("./is-tree-point-on-screen").default,
-  "midpointRoot": require("./midpoint-root").default,
-  "pickNodeAtCanvasPoint": require("./pick-node-at-canvas-point").default,
-  "pickNodeFromLayer": require("./pick-node-from-layer").default,
-  "projectPoint": require("./project-point").default,
-  "render": require("./render").default,
-  "rerootNode": require("./reroot-node").default,
-  "resize": require("./resize").default,
-  "resume": require("./resume").default,
-  "rotateNode": require("./rotate-node").default,
-  "selectLeafNodes": require("./select-leaf-nodes").default,
-  "selectNode": require("./select-node").default,
-  "setBranchZoom": require("./set-branch-zoom").default,
-  "setProps": require("./set-props").default,
-  "setRoot": require("./set-root").default,
-  "setScale": require("./set-scale").default,
-  "setSource": require("./set-source").default,
-  "setStepZoom": require("./set-step-zoom").default,
-  "setTooltip": require("./set-tooltip").default,
-  "setTreeType": require("./set-tree-type").default,
-  "setView": require("./set-view").default,
-  "setZoom": require("./set-zoom").default,
-  "suspend": require("./suspend").default,
-  "unprojectPoint": require("./unproject-point").default,
+import addLayer from "./add-layer";
+import ascendingNodeOrder from "./ascending-node-order";
+import branchZoomingAxis from "./branch-zooming-axis";
+import collapseNode from "./collapse-node";
+import descendingNodeOrder from "./descending-node-order";
+import destroy from "./destroy";
+import exportJSON from "./export-json";
+import exportNewick from "./export-newick";
+import exportPNG from "./export-png";
+import exportSVG from "./export-svg";
+import findNodeById from "./find-node-by-id";
+import fitInCanvas from "./fit-in-canvas";
+import getAlignLeafLabels from "./get-align-leaf-labels";
+import getBlockHeaderFontSize from "./get-block-header-font-size";
+import getBlockPadding from "./get-block-padding";
+import getBlockSize from "./get-block-size";
+import getBranchScale from "./get-branch-scale";
+import getBranchZoom from "./get-branch-zoom";
+import getCanvasCentrePoint from "./get-canvas-centre-point";
+import getCanvasSize from "./get-canvas-size";
+import getDrawingArea from "./get-drawing-area";
+import getFillColour from "./get-fill-colour";
+import getFontFamily from "./get-font-family";
+import getFontSize from "./get-font-size";
+import getGraphAfterLayout from "./get-graph-after-layout";
+import getGraphBeforeLayout from "./get-graph-before-layout";
+import getGraphWithoutLayout from "./get-graph-without-layout";
+import getGraphWithStyles from "./get-graph-with-styles";
+import getHighlightedNode from "./get-highlighted-node";
+import getMaxScale from "./get-max-scale";
+import getMaxZoom from "./get-max-zoom";
+import getMetadataColumnWidth from "./get-metadata-column-width";
+import getMinScale from "./get-min-scale";
+import getMinZoom from "./get-min-zoom";
+import getNodeSize from "./get-node-size";
+import getPadding from "./get-padding";
+import getPixelOffsets from "./get-pixel-offsets";
+import getScale from "./get-scale";
+import getShowShapes from "./get-show-shapes";
+import getStepScale from "./get-step-scale";
+import getStepZoom from "./get-step-zoom";
+import getStepZoomingAxis from "./get-step-zooming-axis";
+import getStrokeColour from "./get-stroke-colour";
+import getStrokeWidth from "./get-stroke-width";
+import getTreeType from "./get-tree-type";
+import getView from "./get-view";
+import getWorldBounds from "./get-world-bounds";
+import getZoom from "./get-zoom";
+import handleClick from "./handle-click";
+import handleHover from "./handle-hover";
+import hasLeafLabels from "./has-leaf-labels";
+import hasMetadata from "./has-metadata";
+import hasMetadataHeaders from "./has-metadata-headers";
+import hasMetadataLabels from "./has-metadata-labels";
+import highlightNode from "./highlight-node";
+import importJSON from "./import-json";
+import init from "./init";
+import isCanvasPointOnScreen from "./is-canvas-point-on-screen";
+import isOrthogonal from "./is-orthogonal";
+import isTreePointOnScreen from "./is-tree-point-on-screen";
+import midpointRoot from "./midpoint-root";
+import pickNodeAtCanvasPoint from "./pick-node-at-canvas-point";
+import pickNodeFromLayer from "./pick-node-from-layer";
+import projectPoint from "./project-point";
+import render from "./render";
+import rerootNode from "./reroot-node";
+import resize from "./resize";
+import resume from "./resume";
+import rotateNode from "./rotate-node";
+import selectLeafNodes from "./select-leaf-nodes";
+import selectNode from "./select-node";
+import setBranchZoom from "./set-branch-zoom";
+import setProps from "./set-props";
+import setRoot from "./set-root";
+import setScale from "./set-scale";
+import setSource from "./set-source";
+import setStepZoom from "./set-step-zoom";
+import setTooltip from "./set-tooltip";
+import setTreeType from "./set-tree-type";
+import setView from "./set-view";
+import setZoom from "./set-zoom";
+import suspend from "./suspend";
+import unprojectPoint from "./unproject-point";
+
+export {
+  addLayer,
+  ascendingNodeOrder,
+  branchZoomingAxis,
+  collapseNode,
+  descendingNodeOrder,
+  destroy,
+  exportJSON,
+  exportNewick,
+  exportPNG,
+  exportSVG,
+  findNodeById,
+  fitInCanvas,
+  getAlignLeafLabels,
+  getBlockHeaderFontSize,
+  getBlockPadding,
+  getBlockSize,
+  getBranchScale,
+  getBranchZoom,
+  getCanvasCentrePoint,
+  getCanvasSize,
+  getDrawingArea,
+  getFillColour,
+  getFontFamily,
+  getFontSize,
+  getGraphAfterLayout,
+  getGraphBeforeLayout,
+  getGraphWithoutLayout,
+  getGraphWithStyles,
+  getHighlightedNode,
+  getMaxScale,
+  getMaxZoom,
+  getMetadataColumnWidth,
+  getMinScale,
+  getMinZoom,
+  getNodeSize,
+  getPadding,
+  getPixelOffsets,
+  getScale,
+  getShowShapes,
+  getStepScale,
+  getStepZoom,
+  getStepZoomingAxis,
+  getStrokeColour,
+  getStrokeWidth,
+  getTreeType,
+  getView,
+  getWorldBounds,
+  getZoom,
+  handleClick,
+  handleHover,
+  hasLeafLabels,
+  hasMetadata,
+  hasMetadataHeaders,
+  hasMetadataLabels,
+  highlightNode,
+  importJSON,
+  init,
+  isCanvasPointOnScreen,
+  isOrthogonal,
+  isTreePointOnScreen,
+  midpointRoot,
+  pickNodeAtCanvasPoint,
+  pickNodeFromLayer,
+  projectPoint,
+  render,
+  rerootNode,
+  resize,
+  resume,
+  rotateNode,
+  selectLeafNodes,
+  selectNode,
+  setBranchZoom,
+  setProps,
+  setRoot,
+  setScale,
+  setSource,
+  setStepZoom,
+  setTooltip,
+  setTreeType,
+  setView,
+  setZoom,
+  suspend,
+  unprojectPoint,
 };

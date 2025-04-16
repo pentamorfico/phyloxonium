@@ -19,31 +19,34 @@
 // THE SOFTWARE.
 
 export default `\
+#version 300 es
 #define SHADER_NAME circular-curve-layer-vertex-shader
 #define TWO_PI radians(360.0)
 
-attribute vec3 positions;
-attribute vec3 instanceCentrePoints;
-attribute vec4 instanceColors;
-attribute vec3 instancePickingColors;
-attribute float instanceRadius;
-attribute float instanceStartAngle;
-attribute float instanceEndAngle;
+// Attributes
+in vec3 positions;
+in vec3 instanceCentrePoints;
+in vec4 instanceColors;
+in vec3 instancePickingColors;
+in float instanceRadius;
+in float instanceStartAngle;
+in float instanceEndAngle;
 
+// Uniforms
 uniform float numSegments;
 uniform float strokeWidth;
 uniform float opacity;
 
-varying vec4 vColor;
+// Varyings
+out vec4 vColor;
 
-// offset vector by strokeWidth pixels
+// Offset vector by strokeWidth pixels
 // offset_direction is -1 (left) or 1 (right)
 vec2 getExtrusionOffset(vec2 line_clipspace, float offset_direction) {
-  // normalized direction of the line
+  // Normalized direction of the line
   vec2 dir_screenspace = normalize(line_clipspace * project_uViewportSize);
-  // rotate by 90 degrees
+  // Rotate by 90 degrees
   dir_screenspace = vec2(-dir_screenspace.y, dir_screenspace.x);
-
   vec2 offset_screenspace = dir_screenspace * offset_direction * strokeWidth / 2.0;
   vec2 offset_clipspace = project_pixel_size_to_clipspace(offset_screenspace).xy;
 
@@ -70,28 +73,31 @@ vec4 computeArcCurve(vec3 centrePoint, float radius, float startAngle, float arc
 }
 
 void main(void) {
-  float arcAngle = (instanceEndAngle > instanceStartAngle) ? (instanceEndAngle - instanceStartAngle) : (TWO_PI + (instanceEndAngle - instanceStartAngle));
+  float arcAngle = (instanceEndAngle > instanceStartAngle) ? 
+    (instanceEndAngle - instanceStartAngle) : 
+    (TWO_PI + (instanceEndAngle - instanceStartAngle));
 
-  // linear interpolation of source & target to pick right coord
+  // Linear interpolation of source & target to pick the right coordinate
   float segmentIndex = positions.x;
   float segmentRatio = getSegmentRatio(segmentIndex);
   vec4 p = computeArcCurve(instanceCentrePoints, instanceRadius, instanceStartAngle, arcAngle, segmentRatio);
 
-  // next point
+  // Next point
   float indexDir = mix(-1.0, 1.0, step(segmentIndex, 0.0));
   float nextSegmentRatio = getSegmentRatio(segmentIndex + indexDir);
   vec4 nextP = computeArcCurve(instanceCentrePoints, instanceRadius, instanceStartAngle, arcAngle, nextSegmentRatio);
 
-  // extrude
+  // Extrude
   float direction = float(positions.y);
-  direction = indexDir *  direction;
+  direction = indexDir * direction;
   vec2 offset = getExtrusionOffset(nextP.xy - p.xy, direction);
+
   gl_Position = p + vec4(offset, 0.0, 0.0);
 
   // Color
-  vColor = vec4(instanceColors.rgb, instanceColors.a * opacity) / 255.;
+  vColor = vec4(instanceColors.rgb, instanceColors.a * opacity) / 255.0;
 
-  // Set color to be rendered to picking fbo (also used to check for selection highlight).
+  // Set color to be rendered to picking FBO (also used to check for selection highlight).
   picking_setPickingColor(instancePickingColors);
 }
 `;

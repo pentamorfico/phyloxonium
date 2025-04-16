@@ -22,13 +22,17 @@
 import { TextLayer } from "@deck.gl/layers";
 import { CompositeLayer } from "@deck.gl/core";
 
-import iconAtlas from "../../shapes/icon-atlas-generator";
+import iconAtlas from "@layers/shapes/icon-atlas-generator";
 
 import BlockLayer from "../block-layer";
 
 const highlightColor = [ 0, 0, 0, 64 ];
 
 export default class MetadataLayer extends CompositeLayer {
+  static get componentName() {
+    return 'MetadataLayer';
+  }
+
   renderLayers() {
     return [
       new BlockLayer({
@@ -64,4 +68,3 @@ export default class MetadataLayer extends CompositeLayer {
     ];
   }
 }
-MetadataLayer.componentName = "MetadataLayer";

@@ -19,9 +19,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import defaults from "../../defaults";
-
-import memoise from "../../utils/memoise";
+import defaults from "@lib/defaults";
+import memoise from "@utils/memoise";
+import colourToRGBA from "@utils/colour-to-rgba";
 
 export default memoise(
   (tree) => tree.getStrokeColour(),

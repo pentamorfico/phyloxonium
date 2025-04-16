@@ -20,13 +20,10 @@
 // THE SOFTWARE.
 
 import { ScatterplotLayer } from "@deck.gl/layers";
-
-import defaults from "../../defaults";
-
-import memoise from "../../utils/memoise";
-import colourToRGBA from "../../utils/colour-to-rgba";
-
-import haloSizeMemo from "../selection/halo-size";
+import defaults from "@lib/defaults";
+import memoise from "@utils/memoise";
+import colourToRGBA from "@utils/colour-to-rgba";
+import haloSizeMemo from "@layers/selection/halo-size";
 import highlightedNodesMemo from "./highlighted-nodes";
 
 export default () => memoise(

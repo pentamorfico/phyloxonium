@@ -22,52 +22,67 @@
 import { ScatterplotLayer } from "@deck.gl/layers";
 
 class CircleSectorLayer extends ScatterplotLayer {
-  getShaders(id) {
+  static get componentName() {
+    return 'CircleSectorLayer';
+  }
+
+  getShaders() {
     return {
       ...super.getShaders(),
-      inject: {
-        "vs:#decl": `
-          attribute float instanceStartAngle;
-          attribute float instanceEndAngle;
-          varying float startAngle;
-          varying float endAngle;
-        `,
-        "vs:#main-start": `
-          startAngle = instanceStartAngle ;
-          endAngle = instanceEndAngle ;
-      `,
-        "fs:#decl": `
-          varying float startAngle;
-          varying float endAngle;
-      `,
-        "fs:DECKGL_FILTER_COLOR": `
-          float angle = atan(-geometry.uv.x, geometry.uv.y) + 3.1415926535897932384626433832795;
-          if (angle < startAngle || angle > endAngle) {
-            discard;
-          }
-        `,
-      },
+      modules: [
+        ...super.getShaders().modules || [],
+        {
+          name: 'circle-sector',
+          vs: `
+            attribute float instanceStartAngle;
+            attribute float instanceEndAngle;
+            varying float startAngle;
+            varying float endAngle;
+
+            void DECKGL_MUTATE_VS_CODE(inout vec4 position) {
+              startAngle = instanceStartAngle;
+              endAngle = instanceEndAngle;
+            }
+          `,
+          fs: `
+            varying float startAngle;
+            varying float endAngle;
+
+            void DECKGL_MUTATE_FS_COLOR(inout vec4 color) {
+              float angle = atan(-geometry.uv.x, geometry.uv.y) + 3.1415926535897932384626433832795;
+              if (angle < startAngle || angle > endAngle) {
+                discard;
+              }
+            }
+          `
+        }
+      ]
     };
   }
 
   initializeState() {
     super.initializeState();
-    this.getAttributeManager().addInstanced({
+    const attributeManager = this.getAttributeManager();
+
+    attributeManager.add({
       instanceStartAngle: {
         size: 1,
-        transition: true,
-        accessor: "getStartAngle",
-        defaultValue: 1,
+        accessor: 'getStartAngle',
+        defaultValue: 0
       },
       instanceEndAngle: {
         size: 1,
-        transition: true,
-        accessor: "getEndAngle",
-        defaultValue: 1,
-      },
+        accessor: 'getEndAngle',
+        defaultValue: Math.PI * 2
+      }
     });
   }
 }
-CircleSectorLayer.componentName = "CircleSectorLayer";
+
+CircleSectorLayer.defaultProps = {
+  ...ScatterplotLayer.defaultProps,
+  getStartAngle: { type: 'accessor', value: 0 },
+  getEndAngle: { type: 'accessor', value: Math.PI * 2 }
+};
 
 export default CircleSectorLayer;

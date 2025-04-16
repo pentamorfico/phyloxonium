@@ -19,7 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import shapeRenderers from "../../utils/shapes";
+import shapeRenderers from "@utils/shapes";
+import memoise from "@utils/memoise";
 
 function drawShapes(size, padding) {
   const shapeNames = Object.keys(shapeRenderers);

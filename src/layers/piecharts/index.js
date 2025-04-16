@@ -19,13 +19,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import defaults from "../../defaults";
-
-import memoise from "../../utils/memoise";
-
-import borderColourMemo from "../shapes/border-colour";
+import defaults from "@lib/defaults";
+import memoise from "@utils/memoise";
+import borderColourMemo from "@layers/shapes/border-colour";
 import slicesDataMemo from "./slices-data";
-
 import CircleSectorLayer from "./circle-sector-layer";
 
 export default () => memoise(

@@ -19,22 +19,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import labelledLeafNodesMemo from "../layers/leaf-labels/labelled-leaf-nodes";
-import textPositionAccessorMemo from "../layers/leaf-labels/text-position-accessor";
-
-import shapeBorderWidthMemo from "../layers/shapes/shape-border-width";
-import shapeBorderColourMemo from "../layers/shapes/border-colour";
-
-import blocksDataMemo from "../layers/metadata/blocks-data";
-import headersDataMemo from "../layers/metadata/headers-data";
-import pixelOffsetAccessorMemo from "../layers/metadata/pixel-offset-accessor";
-import metadataHeaderFontSizeMemo from "../layers/metadata/font-size";
-
-import lineColourMemo from "../layers/edges/line-colour";
-
-import drawVectorShape from "../utils/draw-vector-shape";
-
-import { Angles, TreeTypes } from "../constants";
+import labelledLeafNodesMemo from "@layers/leaf-labels/labelled-leaf-nodes";
+import textPositionAccessorMemo from "@layers/leaf-labels/text-position-accessor";
+import shapeBorderWidthMemo from "@layers/shapes/shape-border-width";
+import shapeBorderColourMemo from "@layers/shapes/border-colour";
+import blocksDataMemo from "@layers/metadata/blocks-data";
+import headersDataMemo from "@layers/metadata/headers-data";
+import pixelOffsetAccessorMemo from "@layers/metadata/pixel-offset-accessor";
+import metadataHeaderFontSizeMemo from "@layers/metadata/font-size";
+import lineColourMemo from "@layers/edges/line-colour";
+import drawVectorShape from "@utils/draw-vector-shape";
+import { Angles, TreeTypes } from "@lib/constants";
 
 function colourArrayToCssRGBA(colourArray, ignoreAlpha = true) {
   const [ r, g, b, a = 255 ] = colourArray;

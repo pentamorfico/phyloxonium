@@ -19,11 +19,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import memoise from "../../utils/memoise";
-
-import visibleLeafNodesMemo from "./visible-leaf-nodes";
+import { CompositeLayer } from "@deck.gl/core";
+import { ScatterplotLayer } from "@deck.gl/layers";
+import memoise from "@utils/memoise";
 import borderColourMemo from "./border-colour";
 import shapeBorderWidthMemo from "./shape-border-width";
+import visibleLeafNodesMemo from "./visible-leaf-nodes";
+import { CollisionFilterExtension } from "@deck.gl/extensions";
 
 import ShapesLayer from "./shapes-layer";
 

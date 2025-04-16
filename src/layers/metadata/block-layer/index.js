@@ -20,20 +20,41 @@
 // THE SOFTWARE.
 
 import { ScatterplotLayer } from "@deck.gl/layers";
-
-import GL from "@luma.gl/constants";
-import { Model, Geometry } from "@luma.gl/core";
-
+import { Model } from "@luma.gl/engine";
 import fs from "./scatterplot-layer-fragment.glsl";
 import vs from "./scatterplot-layer-vertex.glsl";
 
 export default class BlockLayer extends ScatterplotLayer {
+  static get componentName() {
+    return 'BlockLayer';
+  }
 
-  getShaders(id) {
+  getShaders() {
     return {
       ...super.getShaders(),
       fs,
       vs,
+      modules: [
+        ...super.getShaders().modules || [],
+        {
+          name: 'block-layer',
+          fs: `
+            varying float startAngle;
+            varying float endAngle;
+          `,
+          vs: `
+            attribute float instanceStartAngle;
+            attribute float instanceEndAngle;
+            varying float startAngle;
+            varying float endAngle;
+
+            void DECKGL_MUTATE_VS_CODE(inout vec4 position) {
+              startAngle = instanceStartAngle;
+              endAngle = instanceEndAngle;
+            }
+          `
+        }
+      ]
     };
   }
 
@@ -41,62 +62,35 @@ export default class BlockLayer extends ScatterplotLayer {
     super.initializeState();
     const attributeManager = this.getAttributeManager();
 
-    attributeManager.addInstanced({
+    attributeManager.add({
       instanceAngles: {
         size: 1,
-        transition: true,
         accessor: "getAngle",
+        defaultValue: 0
       },
       instancePixelOffset: {
         size: 2,
-        transition: true,
         accessor: "getPixelOffset",
-      },
+        defaultValue: [0, 0]
+      }
     });
   }
 
-  draw({ uniforms }) {
-    const {
-      maxSizeRatio,
-    } = this.props;
+  draw(params) {
+    const { uniforms } = params;
+    const { maxSizeRatio } = this.props;
 
-    this.state.model
-      .setUniforms({ maxSizeRatio });
-
-    super.draw({ uniforms });
-  }
-
-  _getModel(gl) {
-    // a square that minimally cover the unit circle
-    const positions = [ -1, -1, -1, 1, 1, 1, 1, -1 ];
-
-    return new Model(
-      gl,
-      {
-        ...this.getShaders(),
-        id: this.props.id,
-        geometry: new Geometry({
-          drawMode: GL.TRIANGLE_FAN,
-          // vertexCount: 4,
-          attributes: {
-            // The size must be explicitly passed here otherwise luma.gl
-            // will default to assuming that positions are 3D (x,y,z)
-            positions: {
-              size: 2,
-              value: new Float32Array(positions),
-            },
-          },
-        }),
-        isInstanced: true,
+    super.draw({
+      ...params,
+      uniforms: {
+        ...uniforms,
+        maxSizeRatio
       }
-    );
+    });
   }
-
 }
 
 BlockLayer.defaultProps = {
   getAngle: { type: "accessor", value: 0 },
-  getPixelOffset: { type: "accessor", value: [0, 0] },
+  getPixelOffset: { type: "accessor", value: [0, 0] }
 };
-
-BlockLayer.componentName = "BlockLayer";

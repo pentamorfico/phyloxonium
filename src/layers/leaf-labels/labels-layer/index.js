@@ -21,8 +21,8 @@
 
 import { TextLayer, LineLayer } from "@deck.gl/layers";
 import { CompositeLayer } from "@deck.gl/core";
-
-import nodeAngleInDegrees from "../../../utils/node-angle-in-degrees";
+import nodeAngleInDegrees from "@utils/node-angle-in-degrees";
+import { CollisionFilterExtension } from "@deck.gl/extensions";
 
 function getTextAnchor(datum) {
   return (datum.inverted) ? "end" : "start";
@@ -40,6 +40,9 @@ function getNodePosition(node) {
 }
 
 export default class LeafLabelsLayer extends CompositeLayer {
+  static get componentName() {
+    return 'LeafLabelsLayer';
+  }
 
   renderLayers() {
     const layers = [
@@ -49,45 +52,61 @@ export default class LeafLabelsLayer extends CompositeLayer {
         getSize: this.props.fontSize,
         getPosition: this.props.getTextPosition,
         getText,
+        sizeUnits: "meters",
         getAngle: nodeAngleInDegrees,
-        getColor: this.props.fontColour,
         fontFamily: this.props.fontFamily,
-        getTextAnchor,
-        backgroundColor: this.props.backgroundColour,
         updateTriggers: { getPosition: this.props.updateTriggers.getTextPosition },
         pickable: true,
+        sizeMaxPixels:10,
+        autoHighlight: true,
+        getPixelOffset: 10,
+        collisionEnabled: false,
+        collisionTestProps: {
+          alphaCutoff: -1,
+          collisionGroup: "labels",
+          sizeUnits: "pixels",
+          sizeMaxPixels: 0.001
+        },
       }),
     ];
 
-    if (this.props.highlightedNode) {
-      layers.push(
-        new TextLayer({
-          id: "leaf-labels-highlight",
-          data: [ this.props.highlightedNode ],
-          getSize: this.props.fontSize,
-          getPosition: this.props.getTextPosition,
-          getText,
-          getAngle: nodeAngleInDegrees,
-          getColor: this.props.highlightColour,
-          fontFamily: this.props.fontFamily,
-          getTextAnchor,
-          backgroundColor: this.props.backgroundColour,
-        })
-      );
-    }
+    // if (this.props.highlightedNode) {
+    //   layers.push(
+    //     new TextLayer({
+    //       id: "leaf-labels-highlight",
+    //       data: [ this.props.highlightedNode ],
+    //       getSize: this.props.fontSize,
+    //       getPosition: this.props.getTextPosition,
+    //       getText,
+    //       getAngle: nodeAngleInDegrees,
+    //       getColor: this.props.highlightColour,
+    //       fontFamily: this.props.fontFamily,
+    //       getTextAnchor,
+    //       backgroundColor: this.props.backgroundColour,
+    //     })
+    //   );
+    // }
+    
+    console.log(
+      "LineLayer data:",
+      this.props.data.map(d => ({
+        source: this.props.getTextPosition(d),
+        target: getNodePosition(d)
+      }))
+    );
 
     if (this.props.alignLeafLabels) {
       layers.push(
-        new LineLayer({
-          id: "leaf-labels-lines",
-          data: this.props.data,
-          getSourcePosition: this.props.getTextPosition,
-          getTargetPosition: getNodePosition,
-          getColor: this.props.lineColour,
-          getWidth: this.props.lineWidth,
-          opacity: 0.54,
-          updateTriggers: { getSourcePosition: this.props.updateTriggers.getTextPosition },
-        })
+        // new LineLayer({
+        //   id: "leaf-labels-lines",
+        //   data: this.props.data,
+        //   getSourcePosition: this.props.getTextPosition,
+        //   getTargetPosition: getNodePosition,
+        //   getColor: this.props.lineColour,
+        //   getWidth: this.props.lineWidth,
+        //   opacity: 1,
+        //   updateTriggers: { getSourcePosition: this.props.updateTriggers.getTextPosition },
+        // })
       );
     }
 
@@ -95,20 +114,3 @@ export default class LeafLabelsLayer extends CompositeLayer {
   }
 
 }
-
-LeafLabelsLayer.componentName = "LeafLabelsLayer";
-
-LeafLabelsLayer.defaultProps = {
-  // Shared accessors
-  alignLeafLabels: false,
-  getTextPosition: { type: "accessor", value: (node) => [ node.x, node.y ] },
-
-  // text accessors
-  fontSize: 16,
-  fontFamily: "Monaco, monospace",
-  fontColour: [ 0, 0, 0, 255 ],
-
-  // line properties
-  lineWidth: 1,
-  lineColour: [ 0, 0, 0, 255 ],
-};

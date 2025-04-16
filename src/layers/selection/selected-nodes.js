@@ -19,11 +19,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import defaults from "../../defaults";
+import defaults from "@lib/defaults";
 
-import memoise from "../../utils/memoise";
+import memoise from "@utils/memoise";
 
-import { EmptyArray } from "../../constants";
+import { EmptyArray } from "@lib/constants";
 
 export default memoise(
   (tree) => tree.getGraphAfterLayout(),

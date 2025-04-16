@@ -1,0 +1,130 @@
+// src/components/Phyloxonium.jsx
+
+import DeckGL from "@deck.gl/react";
+import { OrthographicView } from "@deck.gl/core";
+import { createInternalNodesLayer, createTerminalNodesLayer } from "@shapes";
+import EdgesLayer from "@layers/edges/edges-layer";
+import { parseNewick } from "@utils/newick";
+import treeTraversal from "@utils/tree-traversal";
+import applyTreeLayout from "@utils/apply-tree-layout";
+
+const shortCodeMap = {
+  radial: "rd",
+  circular: "cr",
+  rectangular: "rc",
+  hierarchical: "hr",
+  diagonal: "dg",
+};
+
+class Phyloxonium {
+  constructor(container, props = {}) {
+    this.container = container;
+    this.props = props;
+    this.graph = null;
+
+    this.init();
+  }
+
+  init() {
+    const { source, treeType = "radial", size = { width: 800, height: 600 } } = this.props;
+    this.width = size.width;
+    this.height = size.height;
+    this.treeType = treeType;
+
+    if (source) {
+      this.setSource(source);
+    }
+  }
+
+  setSource(newickData) {
+    try {
+      const parsed = parseNewick(newickData);
+      const traversed = treeTraversal(parsed);
+
+      for (const node of traversed.postorderTraversal) {
+        node.isCollapsed = false;
+        node.isHidden = false;
+      }
+
+      const shortType = shortCodeMap[this.treeType.toLowerCase()] || "rd";
+      const nodes = {
+        root: traversed.rootNode,
+        preorderTraversal: traversed.preorderTraversal,
+        postorderTraversal: traversed.postorderTraversal,
+        nodeById: traversed.nodeById,
+      };
+
+      const layout = applyTreeLayout(nodes, shortType, true);
+      this.graph = { ...nodes, ...layout };
+
+      this.render();
+    } catch (error) {
+      console.error("Error building tree layout:", error);
+    }
+  }
+
+  setProps(props) {
+    Object.assign(this.props, props);
+    if (props.source) {
+      this.setSource(props.source);
+    }
+    if (props.treeType) {
+      this.treeType = props.treeType;
+      this.render();
+    }
+  }
+
+  reroot(nodeId) {
+    if (!this.graph) return;
+    const node = this.graph.nodeById[nodeId];
+    if (node) {
+      // Implement reroot logic here
+      console.log("Rerooting at node:", node);
+    }
+  }
+
+  render() {
+    if (!this.graph) return;
+
+    const internalNodesLayer = createInternalNodesLayer(
+      this.graph.preorderTraversal.filter((n) => !n.isLeaf)
+    );
+
+    const terminalNodesLayer = createTerminalNodesLayer(
+      this.graph.preorderTraversal.filter((n) => n.isLeaf)
+    );
+
+    const edges = new EdgesLayer({
+      id: "edges-layer",
+      data: {
+        root: this.graph.root,
+        preorderTraversal: this.graph.preorderTraversal,
+        firstIndex: this.graph.root.preIndex,
+        lastIndex: this.graph.root.preIndex + this.graph.root.totalNodes,
+      },
+      treeType: shortCodeMap[this.treeType.toLowerCase()],
+      getColor: () => [0, 0, 0, 255],
+      lineWidth: this.props.lineWidth || 2, // Use lineWidth from props, fallback to 2
+    });
+
+    const deck = new DeckGL({
+      container: this.container,
+      initialViewState: { target: [0, 0], zoom: 10 },
+      controller: true,
+      width: this.width,
+      height: this.height,
+      views: [new OrthographicView()],
+      layers: [edges, internalNodesLayer, terminalNodesLayer],
+    });
+
+    this.deck = deck;
+  }
+
+  destroy() {
+    if (this.deck) {
+      this.deck.finalize();
+    }
+  }
+}
+
+export default Phyloxonium;

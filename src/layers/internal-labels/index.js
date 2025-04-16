@@ -20,8 +20,7 @@
 // THE SOFTWARE.
 
 import { TextLayer } from "@deck.gl/layers";
-
-import memoise from "../../utils/memoise";
+import memoise from "@utils/memoise";
 import fontColourMemo from "./font-colour";
 import internalNodesMemo from "./internal-nodes";
 import pixelOffsetMemo from "./pixel-offset";

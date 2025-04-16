@@ -20,15 +20,13 @@
 // THE SOFTWARE.
 
 import { TextLayer } from "@deck.gl/layers";
-
 import fontColourMemo from "./font-colour";
 import internalNodesMemo from "./internal-nodes";
 import pixelOffsetAccessorMemo from "./pixel-offset-accessor";
 import positionAccessorMemo from "./position-accessor";
 import textAccessorMemo from "./text-accessor";
-
-import nodeAngleInDegrees from "../../utils/node-angle-in-degrees";
-import memoise from "../../utils/memoise";
+import nodeAngleInDegrees from "@utils/node-angle-in-degrees";
+import memoise from "@utils/memoise";
 
 export default () => memoise(
   internalNodesMemo,

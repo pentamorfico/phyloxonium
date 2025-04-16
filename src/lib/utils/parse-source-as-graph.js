@@ -20,8 +20,7 @@
 // THE SOFTWARE.
 
 import treeTraversal from "./tree-traversal";
-
-const newickParser = require("./newick");
+import { parseNewick } from "./newick";
 
 export default function (source) {
   performance.mark("parse");
@@ -35,7 +34,7 @@ export default function (source) {
   let rootNode = null;
   if (type === "newick" || type === undefined) {
     performance.mark("parse newick");
-    rootNode = newickParser.parse_newick(data);
+    rootNode = parseNewick(data);
     performance.measure("  parse newick", "parse newick");
   } else if (type === "biojs") {
     rootNode = data;

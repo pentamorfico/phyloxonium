@@ -19,10 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import memoise from "../../utils/memoise";
-
+import memoise from "@utils/memoise";
 import colourAccessorMemo from "./colour-accessor";
-
 import EdgesLayer from "./edges-layer";
 
 export default () => memoise(

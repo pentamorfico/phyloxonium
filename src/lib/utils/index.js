@@ -1,29 +1,57 @@
-export default {
-  appendToArray: require("./append-to-array").default,
-  applyPlugins: require("./apply-plugins").default,
-  applyTreeLayout: require("./apply-tree-layout").default,
-  calculateNodeBounds: require("./calculate-node-bounds").default,
-  calculateScaledCentre: require("./calculate-scaled-centre").default,
-  canvasContext: require("./canvas-context").default,
-  centreToTarget: require("./centre-to-target").default,
-  colourToRgba: require("./colour-to-rgba").default,
-  createController: require("./create-controller").default,
-  drawVectorShape: require("./draw-vector-shape").default,
-  emoji: require("./emoji").default,
-  hasInteraction: require("./has-interaction").default,
-  logarithmicScale: require("./logarithmic-scale").default,
-  measureTextWidth: require("./measure-text-width").default,
-  memoise: require("./memoise").default,
-  newick: require("./newick").default,
-  nodeAngleInDegrees: require("./node-angle-in-degrees").default,
-  parseSourceAsGraph: require("./parse-source-as-graph").default,
-  postorderTraversal: require("./postorder-traversal").default,
-  preorderTraversal: require("./preorder-traversal").default,
-  rotateSubtree: require("./rotate-subtree").default,
-  scaleToZoom: require("./scale-to-zoom").default,
-  serialiseAsNewick: require("./serialise-as-newick").default,
-  shapes: require("./shapes").default,
-  targetToCentre: require("./target-to-centre").default,
-  treeTraversal: require("./tree-traversal").default,
-  zoomToScale: require("./zoom-to-scale").default,
+import appendToArray from "./append-to-array";
+import applyPlugins from "./apply-plugins";
+import applyTreeLayout from "./apply-tree-layout";
+import calculateNodeBounds from "./calculate-node-bounds";
+import calculateScaledCentre from "./calculate-scaled-centre";
+import canvasContext from "./canvas-context";
+import centreToTarget from "./centre-to-target";
+import colourToRgba from "./colour-to-rgba";
+import createController from "./create-controller";
+import drawVectorShape from "./draw-vector-shape";
+import emoji from "./emoji";
+import hasInteraction from "./has-interaction";
+import logarithmicScale from "./logarithmic-scale";
+import measureTextWidth from "./measure-text-width";
+import memoise from "./memoise";
+import newick from "./newick";
+import nodeAngleInDegrees from "./node-angle-in-degrees";
+import parseSourceAsGraph from "./parse-source-as-graph";
+import postorderTraversal from "./postorder-traversal";
+import preorderTraversal from "./preorder-traversal";
+import rotateSubtree from "./rotate-subtree";
+import scaleToZoom from "./scale-to-zoom";
+import serialiseAsNewick from "./serialise-as-newick";
+import shapes from "./shapes";
+import targetToCentre from "./target-to-centre";
+import treeTraversal from "./tree-traversal";
+import zoomToScale from "./zoom-to-scale";
+
+export {
+  appendToArray,
+  applyPlugins,
+  applyTreeLayout,
+  calculateNodeBounds,
+  calculateScaledCentre,
+  canvasContext,
+  centreToTarget,
+  colourToRgba,
+  createController,
+  drawVectorShape,
+  emoji,
+  hasInteraction,
+  logarithmicScale,
+  measureTextWidth,
+  memoise,
+  newick,
+  nodeAngleInDegrees,
+  parseSourceAsGraph,
+  postorderTraversal,
+  preorderTraversal,
+  rotateSubtree,
+  scaleToZoom,
+  serialiseAsNewick,
+  shapes,
+  targetToCentre,
+  treeTraversal,
+  zoomToScale,
 };

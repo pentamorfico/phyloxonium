@@ -19,9 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import { Angles } from "../../constants";
-
-import memoise from "../../utils/memoise";
+import { Angles } from "@lib/constants";
+import memoise from "@utils/memoise";
 
 export default memoise(
   (tree) => tree.getGraphWithStyles(),
