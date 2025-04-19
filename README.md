@@ -30,8 +30,6 @@ function App() {
   const [source, setSource] = useState(INITIAL_NEWICK);
   const [treeType, setTreeType] = useState('rc');
   const [size, setSize] = useState({ width: 800, height: 600 });
-  const [lineWidth, setLineWidth] = useState(2);
-  const [stylesData, setStylesData] = useState({});
   const containerRef = useRef(null);
 
   useEffect(() => {
