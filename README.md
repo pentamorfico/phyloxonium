@@ -1,6 +1,6 @@
 # Phyloxonium React Component
 
-Phyloxonium is a modern React component for interactive phylogenetic tree visualization, based on a heavily modified fork of [phylocanvas.gl](https://github.com/phylocanvas/phylocanvas.gl). This project updates the rendering engine to a modern version of [deck.gl](https://deck.gl/), enabling performant X and Y zooming and panning, and introduces several improvements for label filtering and overall performance.
+Phyloxonium is a modern React component for interactive phylogenetic tree visualization, based on a heavily modified fork of [phylocanvas.gl](https://gitlab.com/cgps/phylocanvas/phylocanvas.gl). This project updates the rendering engine to a modern version of [deck.gl](https://deck.gl/), enabling performant X and Y zooming and panning, and introduces several improvements for label filtering and overall performance.
 
 **Heavily inspired by [Taxonium](https://github.com/theosanderson/taxonium),** the goal is to make phylocanvas.gl as powerful as Taxonium, while remaining easy to use and customizable as a React component.
 
@@ -63,7 +63,7 @@ export default App;
 
 ## License
 
-This project is a modification of phylocanvas.gl and is distributed under the MIT License. See [phylocanvas.gl](https://github.com/phylocanvas/phylocanvas.gl) for original copyright.
+This project is a modification of phylocanvas.gl and is distributed under the MIT License. See [phylocanvas.gl](https://gitlab.com/cgps/phylocanvas/phylocanvas.gl) for original copyright.
 
 ---
 
