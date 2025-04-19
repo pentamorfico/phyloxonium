@@ -1,5 +1,6 @@
 import applyPlugins from "@utils/apply-plugins";
 import * as methods from "@lib/methods";
+import { Deck } from '@deck.gl/core';
 //import createController from "@lib/utils/create-controller";
 
 class PhyloxoniumGL {
@@ -52,6 +53,27 @@ class PhyloxoniumGL {
     } else {
       this.props.controller = null; // Disable controller if not interactive
     }
+
+    this.deck = new Deck({
+      container: this.container,
+      initialViewState: {
+        zoom: this.props.branchZoom ?? this.props.zoom,
+        target: [0, 0]
+      },
+      controller: this.props.interactive,
+      onViewStateChange: ({viewState, interactionState}) => {
+        // ignore hover or pointer-move events; only update on actual pan/zoom
+        if (interactionState.isHovering || !interactionState.isPanning && !interactionState.isZooming) {
+          return;
+        }
+        if (interactionState.isPanning || interactionState.isZooming) {
+          this.props.branchZoom = viewState.zoom;
+          this.props.stepZoom = viewState.zoom;
+          this.render();
+        }
+      },
+      layers: []
+    });
 
     this.addLayer(
       "edges",

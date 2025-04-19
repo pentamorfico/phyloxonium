@@ -57,13 +57,17 @@ export default class ShapesLayer extends CompositeLayer {
         getSize: this.props.getSize,
         getColor: this.props.getColor,
         updateTriggers: { getSize: this.props.getSize },
-        stroked: true,
-        extensions: [new CollisionFilterExtension()],
+        stroked: false,
+        collisionEnabled: true,
+        extensions: [
+          new CollisionFilterExtension()
+        ],
         collisionGroup: "shapes",
-        sizeUnits: "meters",
-        sizeMinPixels: 1,
-        sizeMaxPixels: 9,
+        sizeUnits: "pixels",
         autoHighlight: true,
+        highlightColor : [ 209, 245, 66, 255 ],
+
+        alphaCutoff : -1,
 
         
 

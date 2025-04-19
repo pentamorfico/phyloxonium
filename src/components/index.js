@@ -1,0 +1,1 @@
+export { default as PhyloxoniumGLComponent } from './PhyloxoniumGLComponent';

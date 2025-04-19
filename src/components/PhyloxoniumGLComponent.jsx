@@ -31,7 +31,6 @@ const PhyloxoniumGLComponent = (props) => {
   }, [props]); // Trigger useEffect whenever props change
 
   useEffect(() => {
-    console.log("Updated lineWidth in PhyloxoniumGLComponent:", mergedProps.lineWidth);
     if (phyloRef.current) {
       phyloRef.current.setProps(mergedProps);
     }

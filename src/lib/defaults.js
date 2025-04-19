@@ -14,9 +14,9 @@ export default Object.freeze({
   collapsedIds: EmptyArray,
   edgeOverlapFactor: -0.5,
   fillColour: [51, 51, 51, 255], // "#333333"
-  fontColour: [51, 51, 51, 255], // "#333333"
+  fontColour: [0, 0, 0, 255], // "#333333"
   fontFamily: "Helvetica",
-  fontSize: 5,
+  fontSize: 9,
   haloRadius: 12,
   haloWidth: 4,
   highlightColour: [60, 115, 131, 255], // "#3C7383"
@@ -25,7 +25,7 @@ export default Object.freeze({
   minScale: 0.01,
   nodeOverlapFactor: 0.1,
   nodeShape: "circle",
-  nodeSize: 14,
+  nodeSize: 4,
   padding: 1,
   rootId: null,
   rotatedIds: EmptyArray,
@@ -45,8 +45,8 @@ export default Object.freeze({
   showShapes: true,
   size: { height: 150, width: 300 }, // default canvas size
   stepZoom: 0,
-  strokeColour: [34, 34, 34, 25], // "#222222"
-  strokeWidth: 2,
+  strokeColour: [150, 150, 150, 50], // "#222222"
+  strokeWidth: 1,
   styleLeafLabels: false,
   styleNodeEdges: false,
   styles: {},

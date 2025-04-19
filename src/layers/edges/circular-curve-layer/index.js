@@ -7,20 +7,17 @@ import { PathLayer } from "@deck.gl/layers";
 export default class CircularCurveLayer extends PathLayer {
   static layerName = 'CircularCurveLayer';
 
+  
   static defaultProps = {
     ...PathLayer.defaultProps,
-    // Modern units configuration
     widthUnits: 'pixels',
     widthScale: 1,
-    widthMinPixels: 0,
+    widthMinPixels: 1,
     widthMaxPixels: Number.MAX_SAFE_INTEGER,
-    billboard: true,
-    capRounded: true,
-    jointRounded: true,
-    
+
     // Curve properties
     numSegments: { type: 'number', min: 2, value: 60 },
-    
+
     // Curve parameter accessors
     getCentrePoint: { type: 'accessor', value: [0, 0] },
     getRadius: { type: 'accessor', value: 100 },
@@ -28,28 +25,24 @@ export default class CircularCurveLayer extends PathLayer {
     getEndAngle: { type: 'accessor', value: Math.PI / 2 }
   };
 
-  getPathGeometry(object) {
-    const centerPoint = this.props.getCentrePoint(object);
-    const radius = this.props.getRadius(object);
-    const startAngle = this.props.getStartAngle(object);
-    const endAngle = this.props.getEndAngle(object);
-    const { numSegments } = this.props;
+  getPath(object) {
+    const { getCentrePoint, getRadius, getStartAngle, getEndAngle, numSegments } = this.props;
+    const centerPoint = getCentrePoint(object);
+    const radius = getRadius(object);
+    const startAngle = getStartAngle(object);
+    const endAngle = getEndAngle(object);
 
-    // Generate points along the arc
     const points = [];
+    const deltaAngle = (endAngle - startAngle) / numSegments;
+
     for (let i = 0; i <= numSegments; i++) {
-      const t = i / numSegments;
-      const angle = startAngle + t * (endAngle - startAngle);
+      const angle = startAngle + deltaAngle * i;
       points.push([
         centerPoint[0] + radius * Math.cos(angle),
         centerPoint[1] + radius * Math.sin(angle)
       ]);
     }
-    
-    return points;
-  }
 
-  _getModel(gl) {
-    return super._getModel(gl);
+    return points;
   }
 }

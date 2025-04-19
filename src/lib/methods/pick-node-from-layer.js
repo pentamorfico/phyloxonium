@@ -26,7 +26,7 @@ export default function pickNodeFromLayer({ layer, object }) {
     if (layer.id === "shapes" || layer.id === "edges" || layer.id === "leaf-labels") {
       node = object;
     }
-    else if (layer.id === "piecharts" || layer.id === "metadata") {
+    else if (layer.id === "piecharts" || layer.id === "metadata" || layer.id === "circular-lines" || layer.id === "circular-arcs") {
       node = object.node;
     }
     else {

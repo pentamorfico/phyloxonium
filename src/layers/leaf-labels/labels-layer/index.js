@@ -21,11 +21,12 @@
 
 import { TextLayer, LineLayer } from "@deck.gl/layers";
 import { CompositeLayer } from "@deck.gl/core";
+import {CollisionFilterExtension} from '@deck.gl/extensions';
+
 import nodeAngleInDegrees from "@utils/node-angle-in-degrees";
-import { CollisionFilterExtension } from "@deck.gl/extensions";
 
 function getTextAnchor(datum) {
-  return (datum.inverted) ? "end" : "start";
+  return datum.inverted ? "end" : "start";
 }
 
 function getText(datum) {
@@ -33,17 +34,11 @@ function getText(datum) {
 }
 
 function getNodePosition(node) {
-  return [
-    node.x,
-    node.y,
-  ];
+  return [node.x, node.y];
 }
 
 export default class LeafLabelsLayer extends CompositeLayer {
-  static get componentName() {
-    return 'LeafLabelsLayer';
-  }
-
+  static layerName = "LeafLabelsLayer";
   renderLayers() {
     const layers = [
       new TextLayer({
@@ -54,63 +49,39 @@ export default class LeafLabelsLayer extends CompositeLayer {
         getText,
         sizeUnits: "meters",
         getAngle: nodeAngleInDegrees,
+        getColor: this.props.fontColour,
         fontFamily: this.props.fontFamily,
-        updateTriggers: { getPosition: this.props.updateTriggers.getTextPosition },
-        pickable: true,
-        sizeMaxPixels:10,
-        autoHighlight: true,
-        getPixelOffset: 10,
-        collisionEnabled: false,
+        getTextAnchor,
+        getPixelOffset: -10,
+        alphaCutoff: -1,
+        background: false,
+        extensions: [
+          new CollisionFilterExtension(),
+        ],
+        pickable: false,
         collisionTestProps: {
-          alphaCutoff: -1,
-          collisionGroup: "labels",
+          getSize: 1,
           sizeUnits: "pixels",
-          sizeMaxPixels: 0.001
+          maxWidth: 1,
         },
       }),
     ];
 
-    // if (this.props.highlightedNode) {
+    // if (this.props.alignLeafLabels) {
     //   layers.push(
-    //     new TextLayer({
-    //       id: "leaf-labels-highlight",
-    //       data: [ this.props.highlightedNode ],
-    //       getSize: this.props.fontSize,
-    //       getPosition: this.props.getTextPosition,
-    //       getText,
-    //       getAngle: nodeAngleInDegrees,
-    //       getColor: this.props.highlightColour,
-    //       fontFamily: this.props.fontFamily,
-    //       getTextAnchor,
-    //       backgroundColor: this.props.backgroundColour,
+    //     new LineLayer({
+    //       id: "leaf-labels-lines",
+    //       data: this.props.data,
+    //       getSourcePosition: this.props.getTextPosition,
+    //       getTargetPosition: getNodePosition,
+    //       getColor: this.props.lineColour,
+    //       getWidth: this.props.lineWidth,
+    //       opacity: 0.54,
+    //       updateTriggers: { getSourcePosition: this.props.updateTriggers.getTextPosition },
     //     })
     //   );
     // }
-    
-    console.log(
-      "LineLayer data:",
-      this.props.data.map(d => ({
-        source: this.props.getTextPosition(d),
-        target: getNodePosition(d)
-      }))
-    );
-
-    if (this.props.alignLeafLabels) {
-      layers.push(
-        // new LineLayer({
-        //   id: "leaf-labels-lines",
-        //   data: this.props.data,
-        //   getSourcePosition: this.props.getTextPosition,
-        //   getTargetPosition: getNodePosition,
-        //   getColor: this.props.lineColour,
-        //   getWidth: this.props.lineWidth,
-        //   opacity: 1,
-        //   updateTriggers: { getSourcePosition: this.props.updateTriggers.getTextPosition },
-        // })
-      );
-    }
 
     return layers;
   }
-
 }

@@ -21,32 +21,48 @@
 
 import canvasContext from "./canvas-context";
 
+// Cache to store already computed colors
 const cache = new Map();
 
-const transparentColour = [ 0, 0, 0, 0 ];
+// Special handling for the transparent color
+const transparentColour = [0, 0, 0, 0];
 transparentColour.isTransparent = true;
 
+// Main function to convert CSS color strings to RGBA arrays
 export default function colourToRGBA(colour) {
   if (Array.isArray(colour)) {
+    // Return early if the input is already an RGBA array
     return colour;
   }
 
   if (colour === "transparent") {
+    // Handle the special case for transparent
     return transparentColour;
   }
 
-  const ctx = canvasContext();
-  let rgbaArray = cache.get(colour);
-
-  if (rgbaArray === undefined) {
-    ctx.fillStyle = "rgba(0, 0, 0, 0)";
-    ctx.fillStyle = colour;
-    ctx.fillRect(0, 0, 1, 1);
-    const imageData = ctx.getImageData(0, 0, 1, 1);
-    rgbaArray = imageData.data;
-
-    cache.set(colour, rgbaArray);
+  // Use cached result if available
+  if (cache.has(colour)) {
+    return cache.get(colour);
   }
+
+  // Obtain a canvas context optimized for frequent reads
+  const ctx = canvasContext();
+
+  // Set a default transparent color
+  ctx.fillStyle = "rgba(0, 0, 0, 0)";
+  // Apply the provided color
+  ctx.fillStyle = colour;
+  // Draw a pixel with the specified color
+  ctx.fillRect(0, 0, 1, 1);
+
+  // Read the pixel data
+  const imageData = ctx.getImageData(0, 0, 1, 1).data;
+
+  // Copy the data to avoid canvas context retention
+  const rgbaArray = new Uint8ClampedArray(imageData);
+
+  // Cache the computed RGBA array
+  cache.set(colour, rgbaArray);
 
   return rgbaArray;
 }

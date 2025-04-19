@@ -20,36 +20,22 @@
 // THE SOFTWARE.
 
 import defaults from "../defaults";
+
 import zoomToScale from "../utils/zoom-to-scale";
 
 export default function setZoom(zoom, screenPoint = this.getCanvasCentrePoint()) {
-  const newZoom = Math.min(Math.max(zoom ?? defaults.zoom, this.getMinZoom()), this.getMaxZoom());
+  const newZoom = zoom ?? defaults.zoom;
 
   if (screenPoint) {
     const startScale = this.getScale();
     const newScale = zoomToScale(newZoom);
     const scaleDelta = newScale / startScale;
-
-    // Use deck.gl's built-in transition system when available
-    if (this.deck.viewManager?.views[0]?.transition) {
-      this.deck.setProps({
-        viewState: {
-          ...this.deck.viewState,
-          zoom: newZoom,
-          transitionDuration: 250,
-          transitionInterpolator: {
-            around: screenPoint
-          }
-        }
-      });
-    } else {
-      // Fallback to manual zoom
-      this.deck.viewManager.controllers.OrthographicView.zoom(
-        scaleDelta,
-        screenPoint,
-      );
-    }
-  } else {
+    this.deck.viewManager.controllers.OrthographicView.zoom(
+      scaleDelta,
+      screenPoint,
+    );
+  }
+  else {
     this.setView({
       zoom: newZoom,
     });

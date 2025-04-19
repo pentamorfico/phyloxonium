@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 import memoise from "@utils/memoise";
+import nodeAngleInDegrees from '@utils/node-angle-in-degrees';
 
 function totalSubtreeLengthMemo(tree) {
   const graph = tree.getGraphAfterLayout();
@@ -30,7 +31,7 @@ export default memoise(
   (tree) => tree.getAlignLeafLabels(),
   totalSubtreeLengthMemo,
   (tree) => tree.getBranchScale(),
-  (tree) => tree.getScale(),
+  (tree) => tree.getStepZoom(),
   (tree) => (tree.getShowShapes() ? tree.getNodeSize() : 0),
   (
     alignLeafLabels,
@@ -40,13 +41,16 @@ export default memoise(
     nodeSize,
   ) => {
     return (node) => {
-      let offset = nodeSize / scale;
+      let offset = 10;
       if (alignLeafLabels) {
         offset += (totalSubtreeLength - node.distanceFromRoot) * branchScale;
       }
+      // use nodeAngleInDegrees for consistent label alignment
+      const deg = nodeAngleInDegrees(node);
+      const rad = (deg / 180) * Math.PI;
       return [
-        node.x + offset * Math.cos(node.angle),
-        node.y + offset * Math.sin(node.angle),
+        node.x + offset * Math.cos(rad),
+        node.y + offset * Math.sin(rad),
       ];
     };
   }

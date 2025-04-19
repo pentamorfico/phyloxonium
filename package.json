@@ -1,7 +1,7 @@
 {
   "name": "phyloxonium",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.0.1-alpha",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -19,6 +19,8 @@
     "@luma.gl/engine": "^9.1.7",
     "@luma.gl/shadertools": "^9.1.7",
     "@vitejs/plugin-react": "^4.3.4",
+    "axios": "^1.8.4",
+    "d3-quadtree": "^3.0.1",
     "pako": "^2.1.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

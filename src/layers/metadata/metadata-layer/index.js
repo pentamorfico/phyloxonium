@@ -36,7 +36,6 @@ export default class MetadataLayer extends CompositeLayer {
   renderLayers() {
     return [
       new BlockLayer({
-        autoHighlight: true,
         data: this.props.blocks,
         getAngle: (datum) => datum.node.angleDegrees,
         getColor: (datum) => datum.colour,

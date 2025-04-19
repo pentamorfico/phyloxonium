@@ -1,26 +1,21 @@
-// Phylocanvas.gl (https://phylocanvas.gl)
-// Centre for Genomic Pathogen Surveillance.
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
 import defaults from "../defaults";
 
 export default function getBranchZoom() {
-  return this.props.branchZoom ?? defaults.branchZoom;
+  // Check if 'viewState' and 'zoom' are defined in this.deck
+  if (this.deck && this.deck.viewState && this.deck.viewState.zoom) {
+    const [zoomX, zoomY] = this.deck.viewState.zoom;
+    // Determine the step zooming axis
+    const axis = this.getStepZoomingAxis();
+    if (axis === "y") {
+      return zoomY;  // Inverted: returning zoomY when axis is 'x'
+    } else if (axis === "x") {
+      return zoomX;  // Inverted: returning zoomX when axis is 'y'
+    } else {
+      // If no specific axis, return the average
+      return (zoomX + zoomY) / 2;
+    }
+  } else {
+    // If no viewState or zoom, return default values
+    return defaults.branchZoom;
+  }
 }

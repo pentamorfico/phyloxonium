@@ -52,7 +52,6 @@ export default function () {
   }
 
   const viewState = this.getView();
-
   const t2 = performance.now();
   this.view.style.width = `${this.props.size.width}px`;
   this.view.style.height = `${this.props.size.height}px`;

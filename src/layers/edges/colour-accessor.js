@@ -37,6 +37,7 @@ export default memoise(
     highlightedNode,
   ) => {
     if (highlightedNode || styleNodeEdges) {
+
       return (node) => {
         if (
           highlightedNode &&

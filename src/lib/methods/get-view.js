@@ -78,4 +78,5 @@ const getViewMemo = memoise(
 export default function getView() {
   const viewState = getViewMemo(this);
   return viewState;
+  
 }

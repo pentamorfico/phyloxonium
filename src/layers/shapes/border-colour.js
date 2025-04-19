@@ -32,7 +32,7 @@ export default memoise(
   ) => {
     const colour = [ ...strokeColour ];
 
-    colour[3] = shapeBorderAlpha * 255;
+    colour[3] = shapeBorderAlpha * 0;
 
     return colour;
   }

@@ -28,10 +28,11 @@ export default function getAlignLeafLabels() {
     case TreeTypes.Circular:
     case TreeTypes.Hierarchical:
     case TreeTypes.Rectangular:
+    case TreeTypes.Radial:
+
       return this.props.alignLabels || defaults.alignLabels;
 
     case TreeTypes.Diagonal:
-    case TreeTypes.Radial:
       return false;
 
     default:
